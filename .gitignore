@@ -164,3 +164,4 @@ cython_debug/
 # API keys that shouldn't be checked into github
 #
 openaiapikey.txt
+discordapikey.txt
