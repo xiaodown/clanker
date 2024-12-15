@@ -38,7 +38,7 @@ async def check_inactivity():
                         # reset delta to randomize it each time
                         deltaminutes = (120 + random.randint(1, 59))
                         await channel.send(message)
-                # Reset the last_message_time to avoid repeated actions
+                # Reset the last_message_time to avoid doing again immediately
                 last_message_time = datetime.now()
         await asyncio.sleep(60)  # Check every minute
 
