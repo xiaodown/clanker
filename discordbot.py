@@ -26,7 +26,7 @@ async def check_inactivity():
     await bot.wait_until_ready()
     global last_message_time
     while not bot.is_closed():
-        print("Idle timer check")
+        #print("Idle timer check")
         if bot_has_ever_spoken:
             if datetime.now() - last_message_time > timedelta(minutes=deltaminutes):
                 print(f"Two hours and {deltaminutes - 120} minutes has passed without a message.")
