@@ -20,7 +20,7 @@ But he's also kind of a jerk.
 # Run instructions
 Just run the run.sh script.
 
-To debug the AI message/response, you can run chat.py standalone.
+To debug the AI message/response, you can run openai_bot_interface.py standalone.
 
 # Why is it called Clanker?
 Clanker is a star wars term (kind of derogatory) for a worthless droid.
