@@ -162,6 +162,8 @@ cython_debug/
 #.idea/
 #
 # API keys that shouldn't be checked into github
+# And yes I know if you go searching through the commit history, you can find my openai
+# api key.  I've already rotated it and deleted that one, smart guy.
 #
 openaiapikey.txt
 discordapikey.txt

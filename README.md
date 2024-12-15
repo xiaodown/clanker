@@ -1,6 +1,8 @@
 # Clanker
 
-Objective: discord bot that uses a LLM to chat with users
+Objective: discord bot that uses a LLM to chat with users.
+
+But he's also kind of a jerk.
 
 # Installation instructions
  * Check out the repo and cd into the directory.
