@@ -1,4 +1,4 @@
-# chatbot
+# Clanker
 
 Objective: discord bot that uses a LLM to chat with users
 
@@ -19,3 +19,14 @@ Objective: discord bot that uses a LLM to chat with users
 Just run the run.sh script.
 
 To debug the AI message/response, you can run chat.py standalone.
+
+# Why is it called Clanker?
+Clanker is a star wars term (kind of derogatory) for a worthless droid.
+That's the bot's name in my discord server, but ofc it's configurable.
+
+# TODO:
+I eventually want:
+ * Him to have something of a memory of what he's said
+ * To not be using OpenAI, instead to use a LLM that I have some more control over and maybe host locally.
+ * Eventually maybe even stream on twitch with a vtuber avatar like neuro-sama? 
+ * * but probably not.  That seems like a lot of work.
