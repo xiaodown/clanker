@@ -29,7 +29,7 @@ async def check_inactivity():
         print("Idle timer check")
         if bot_has_ever_spoken:
             if datetime.now() - last_message_time > timedelta(minutes=deltaminutes):
-                print(f"Two hours and {deltaminutes - 120} has passed without a message.")
+                print(f"Two hours and {deltaminutes - 120} minutes has passed without a message.")
                 message = openai_bot_interface.get_ai_idle_musing()
                 guild = bot.get_guild(last_guild_id)
                 if guild:
