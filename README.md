@@ -6,7 +6,7 @@ But he's also kind of a jerk.
 
 # Installation instructions
  * Check out the repo and cd into the directory.
- * Put OpenAI API key in openaiapikey.txt in the root of the checkout.
+ * Put OpenAI API key in openaiapikey.txt in the root of the checkout (if using openai).
  * Put discord app api key in discordapikey.txt in the root of the checkout.
  * Install `uv` with `curl -LsSf https://astral.sh/uv/install.sh | sh`.
  * Use `uv` to install python 3.12:
