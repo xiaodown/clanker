@@ -1,4 +1,5 @@
 from enum import Enum
+import os
 
 class AIProvider(Enum):
     OLLAMA = "ollama"
@@ -19,9 +20,12 @@ class AI:
             return "gemma2"
 
 def load_openai_api_key():
-    with open('openaiapikey.txt', 'r') as file:
-        api_key = file.read().strip()
-    return api_key
+    try:
+        with open('openaiapikey.txt', 'r') as file:
+            api_key = file.read().strip()
+        return api_key
+    except FileNotFoundError:
+        return None
 
 def load_discord_api_key():
     with open('discordapikey.txt', 'r') as file:
