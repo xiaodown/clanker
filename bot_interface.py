@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_response(prompt):
+    print (f"using provider {settings.ai.provider} and model {settings.ai.model}")
     if settings.ai.provider == settings.AIProvider.OPENAI:
         return openai_bot_interface.get_response(prompt, model=settings.ai.model)
     elif settings.ai.provider == settings.AIProvider.OLLAMA:

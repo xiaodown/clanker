@@ -17,18 +17,37 @@ But he's also kind of a jerk.
  * Use `uv` to pip install the requirements:
  * * `uv pip install -r requirements.txt`
 
+# Ollama instructions
+If you don't want to use OpenAI, I would suggest using ollama which is basically an openai-compatible api with a bunch of convenience features built in for downloading LLMs.  I'm using gemma2 but this is configurable, just change it in settings.py.  You can also switch between openai and ollama in settings.py.
+
+The basic setup of ollama goes something like:
+ * install ollama
+ * * `curl -fsSL https://ollama.com/install.sh | bash`
+ * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (screws up WSL)
+ * Run ollama
+ * * `ollama serve` (will consume a terminal as long as it's running)
+ * Download a model
+ * * `ollama pull gemma2`
+
+Training and feeding your LLM more data are out of scope for this document (because I don't know how yet).  
+
 # Run instructions
 Just run the run.sh script.
 
-To debug the AI message/response, you can run openai_bot_interface.py standalone.
+To debug the AI message/response, you can run bot_interface.py standalone.
 
 # Why is it called Clanker?
 Clanker is a star wars term (kind of derogatory) for a worthless droid.
 That's the bot's name in my discord server, but ofc it's configurable.
 
 # TODO:
+Code desperately needs:
+ * Organization
+ * I hate the classes in the settings file, they need a rework, but I was just throwing stuff together
 I eventually want:
  * Him to have something of a memory of what he's said
- * To not be using OpenAI, instead to use a LLM that I have some more control over and maybe host locally.
+ * * short term memory (conversational)
+ * * long term memory (feed chat transcripts back to him so he learns about himself and those he interacts with)
+ * ~~To not be using OpenAI, instead to use a LLM that I have some more control over and maybe host locally.~~ FRIKIN' DONE
  * Eventually maybe even stream on twitch with a vtuber avatar like neuro-sama? 
  * * but probably not.  That seems like a lot of work.

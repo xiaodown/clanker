@@ -1,5 +1,5 @@
 import discord
-import openai_bot_interface
+import bot_interface
 import asyncio
 from datetime import datetime, timedelta
 import random
@@ -28,7 +28,7 @@ async def check_inactivity():
         if _bot_has_ever_spoken:
             if datetime.now() - _last_message_time > timedelta(minutes=deltaminutes):
                 print(f"Two hours, {deltaminutes - 120} minutes have passed without a message.")
-                message = openai_bot_interface.get_ai_idle_musing()
+                message = bot_interface.get_ai_idle_musing()
                 guild = bot.get_guild(_last_guild_id)
                 if guild:
                     channel = guild.get_channel(_last_channel_id)
@@ -66,6 +66,6 @@ async def on_message(message):
         _last_guild_id = message.guild.id
         global _last_channel_id
         _last_channel_id = message.channel.id
-        await message.channel.send(openai_bot_interface.get_ai_response(message.content))
+        await message.channel.send(bot_interface.get_ai_response(message.content))
 
 bot.run(api_key)

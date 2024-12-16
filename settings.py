@@ -4,6 +4,9 @@ class AIProvider(Enum):
     OLLAMA = "ollama"
     OPENAI = "openai"
 
+    def __str__(self):
+        return self.value
+
 class AI:
     def __init__(self, provider: AIProvider):
         self.provider = provider
@@ -15,9 +18,6 @@ class AI:
         elif self.provider == AIProvider.OLLAMA:
             return "gemma2"
 
-bot_name = "Clanker"
-ai = AI(AIProvider.OPENAI)  # Change this to switch providers
-
 def load_openai_api_key():
     with open('openaiapikey.txt', 'r') as file:
         api_key = file.read().strip()
@@ -27,3 +27,8 @@ def load_discord_api_key():
     with open('discordapikey.txt', 'r') as file:
         api_key = file.read().strip()
     return api_key
+
+# Changable settings below here
+
+bot_name = "Clanker"
+ai = AI(AIProvider.OLLAMA)  # Change this to switch providers
