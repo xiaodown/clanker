@@ -24,8 +24,6 @@ The basic setup of ollama goes something like:
  * install ollama
  * * `curl -fsSL https://ollama.com/install.sh | bash`
  * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (screws up WSL)
- * Run ollama
- * * `ollama serve` (will consume a terminal as long as it's running)
  * Download a model
  * * `ollama pull gemma2`
 
