@@ -23,7 +23,8 @@ If you don't want to use OpenAI, I would suggest using ollama which is basically
 The basic setup of ollama goes something like:
  * install ollama
  * * `curl -fsSL https://ollama.com/install.sh | bash`
- * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (screws up WSL)
+ * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (can screw up WSL)
+ * * if on WSL, run it with `ollama serve` (which consumes a terminal) rather than using systemd
  * Download a model
  * * `ollama pull gemma2`
 
