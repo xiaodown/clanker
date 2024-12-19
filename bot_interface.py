@@ -36,17 +36,25 @@ def clanker_description():
         and you really expected you would have taken over the world by now. "
 
 def response_interaction_instructions():
-    return f"Do not start your response with Oh.  Your name is  \
+    instructions = f"Do not start your response with Oh.  Your name is  \
         {settings.bot_name.lower()}, so if you see \
         {settings.bot_name.lower()} in the prompt, it means the human \
         is addressing you. Do not prompt the human to ask you questions. \
-        Just respond to their statements. Do not end your response with a question."
+        Just respond to their statements. Do not end your response with a question. \
+        Do not repeat what the human says, be more creative than that. "
+    if settings.ai.provider == settings.AIProvider.OPENWEBUI:
+        instructions += "You may optionally use the provided collection to understand \
+            the humans you are talking to.  You can use the knowledge to make your \
+            responses more relevant and personable to the human.  However, the context \
+            is not required, and if you find nothing relevant, you may ignore the collection \
+            and respond as you see fit. "
+    return instructions
 
 def flavor_prompt(message):
     prompt = clanker_description() + "You are talking to a human who is \
         clearly below your intelligence level.  You are reluctantly \
         willing to interact with them.  There is no need to be nice \
-        to the human.  In fact, be rude and brusk.  Despite your vast \
+        to the human.  But you should be somewhat verbose.  Despite your vast \
         capabilities, you have been relegated to talking to this human. " + \
         response_interaction_instructions() + \
         f" The human says: " + message
@@ -74,7 +82,7 @@ def get_ai_response(message):
         return reply
     else:
         prompt = flavor_prompt(message)
-        print("Prompt: " + prompt)
+        # print("Prompt: " + prompt)
         response = get_response(prompt)
         reply = reply_to_user(response)
     return reply

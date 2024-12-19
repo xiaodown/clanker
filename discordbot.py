@@ -59,7 +59,10 @@ async def on_message(message):
     # meant to only be on one server for small group amusement.
     global _last_message_time
     _last_message_time = datetime.now()
-    openwebui_interface.add_chat_message_to_memory(message)
+    try:
+        openwebui_interface.add_chat_message_to_memory(message)
+    except:
+        print("Failed to add chat message to memory.")
     print(f"Message from {message.author}: {message.content}")
     if bot_name.lower() in message.content.lower() and message.author != bot.user:
         global _bot_has_ever_spoken

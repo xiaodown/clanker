@@ -19,7 +19,8 @@ class AI:
         elif self.provider == AIProvider.OLLAMA:
             return "gemma2"
         elif self.provider == AIProvider.OPENWEBUI:
-            return "dolphin-llama3:8b-256k"
+            #return "dolphin-llama3:8b-256k"
+            return "gemma2:latest"
 
 def load_openai_api_key():
     try:
@@ -44,3 +45,25 @@ def load_openwebui_api_key():
 bot_name = "Clanker"
 ai = AI(AIProvider.OPENWEBUI)  # Change this to switch providers
 bypass_filter = True # only applies to open-webui interface
+
+
+# Below is the knowledge_id of the knowledge collection.  This is what
+# allows for RAG / basically for the model to use chat logs for context.
+# Everything said in any chat that the bot is in will be stored here.
+# You can create a knowledge collection by using a curl command similar
+# to the one below.  You'll need the id, which is the first field returned.
+# For now, this must be done manually.  
+# Only applies to open-webui interface.
+'''
+curl -X 'POST' \
+  'http://localhost:8080/api/v1/knowledge/create' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "name": "kb_name",
+  "description": "Your Description",
+  "data": {},
+  "access_control": {}
+}'
+'''
+knowledge_id = "f3359da7-3438-4d02-9b2b-5045d9e32fe6"

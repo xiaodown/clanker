@@ -57,9 +57,14 @@ Clanker is a star wars term (kind of derogatory) for a worthless droid.
 That's the bot's name in my discord server, but ofc it's configurable.
 
 # TODO:
-Code desperately needs:
+Code short term needs:
  * Organization
  * I hate the classes in the settings file, they need a rework, but I was just throwing stuff together
+ * Create the knowledge collection if it doesn't exist, otherwise just use it.
+ * Use the conversation function (right now basically everything is a new convo). 
+ * * It could be something like start a convo, then once the same timer for the idle musing is up, end the convo (?)
+ * Make him respond to DMs (currently it errors because message.guild.id doesn't make sense in a dm)
+ * Find out why gemma2 doesn't like using the provided knowledge collection?
 
 I eventually want:
  * Him to have something of a memory of what he's said
