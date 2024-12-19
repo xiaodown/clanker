@@ -26,9 +26,22 @@ The basic setup of ollama goes something like:
  * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (can screw up WSL)
  * * if on WSL, run it with something like `nohup ollama serve >> ollama.log &` rather than systemd.
  * Download a model
- * * `ollama pull gemma2`
+ * * `ollama pull gemma2`  (or whatever model)
 
 Training and feeding your LLM more data are out of scope for this document (because I don't know how yet).  
+
+# Open-Webui instructions
+I'm using this because the API makes it fairly easy to do RAG and context window stuff.
+
+ * In a new directory, create a venv
+ * * `uv venv`
+ * Install open-Webui
+ * * `uv pip install open-webui`
+ * Activate the venv and run open-webui
+ * * `source ./venv/bin/activate` then `open-webui serve`
+
+ If you already have ollama running on the default port, it will automatically use it.
+
 
 # Run instructions
 Just run the run.sh script.
@@ -43,10 +56,12 @@ That's the bot's name in my discord server, but ofc it's configurable.
 Code desperately needs:
  * Organization
  * I hate the classes in the settings file, they need a rework, but I was just throwing stuff together
+
 I eventually want:
  * Him to have something of a memory of what he's said
  * * short term memory (conversational)
  * * long term memory (feed chat transcripts back to him so he learns about himself and those he interacts with)
  * ~~To not be using OpenAI, instead to use a LLM that I have some more control over and maybe host locally.~~ FRIKIN' DONE
- * Eventually maybe even stream on twitch with a vtuber avatar like neuro-sama? 
- * * but probably not.  That seems like a lot of work.
+ * Speech-to-text
+ * Text-to-Speech
+ * join discord channels
