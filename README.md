@@ -27,7 +27,7 @@ The basic setup of ollama goes something like:
  * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (can screw up WSL)
  * * if on WSL, run it with something like `nohup ollama serve >> ollama.log &` rather than systemd.
  * Download a model
- * * `ollama pull gemma2`  (or whatever model)
+ * * `ollama pull gemma2`  (or whatever model, configurable in settings)
 
 Training and feeding your LLM more data are out of scope for this document (because I don't know how yet).  
 

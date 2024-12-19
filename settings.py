@@ -43,3 +43,4 @@ def load_openwebui_api_key():
 
 bot_name = "Clanker"
 ai = AI(AIProvider.OPENWEBUI)  # Change this to switch providers
+bypass_filter = True # only applies to open-webui interface

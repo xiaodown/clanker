@@ -4,6 +4,7 @@ import asyncio
 from datetime import datetime, timedelta
 import random
 import settings
+import interfaces.openwebui_interface as openwebui_interface
 
 bot_name = settings.bot_name
 api_key = settings.load_discord_api_key()
@@ -58,6 +59,7 @@ async def on_message(message):
     # meant to only be on one server for small group amusement.
     global _last_message_time
     _last_message_time = datetime.now()
+    openwebui_interface.add_chat_message_to_memory(message)
     print(f"Message from {message.author}: {message.content}")
     if bot_name.lower() in message.content.lower() and message.author != bot.user:
         global _bot_has_ever_spoken

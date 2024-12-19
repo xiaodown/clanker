@@ -28,7 +28,7 @@ class AIResponse:
 def get_response(prompt, model):
     logger.info("Prompt: " + prompt)
     api_key = load_openwebui_key()
-    url = f"{base_url}api/chat/completions"
+    url = f"{base_url}api/chat/completions?bypass_filter={settings.bypass_filter}"
     headers = {
         'Authorization': f'Bearer {api_key}',
         'Content-Type': 'application/json'
@@ -44,15 +44,20 @@ def get_response(prompt, model):
     }
     response = requests.post(url, headers=headers, json=data)
     response.raise_for_status()  # Raise an error for bad status codes
-    print("\n *** RESPONSE: " + str(response.json()) + " *** \n")
+    # print("\n *** RESPONSE: " + str(response.json()) + " *** \n")
     return AIResponse(response.json())
 
-def upload_file(token, file_path):
+def upload_file(file_path):
+    api_key = load_openwebui_key()
     url = 'http://localhost:8080/api/v1/files/'
     headers = {
-        'Authorization': f'Bearer {token}',
+        'Authorization': f'Bearer {api_key}',
         'Accept': 'application/json'
     }
     files = {'file': open(file_path, 'rb')}
     response = requests.post(url, headers=headers, files=files)
     return response.json()
+
+def add_chat_message_to_memory(message):
+    # Kind of a generic method name because this may change
+    message.
