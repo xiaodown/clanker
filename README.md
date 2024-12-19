@@ -8,6 +8,7 @@ But he's also kind of a jerk.
  * Check out the repo and cd into the directory.
  * Put OpenAI API key in openaiapikey.txt in the root of the checkout (if using openai).
  * Put discord app api key in discordapikey.txt in the root of the checkout.
+ * (eventually, see below) put your open-webui api key into openwebuiapikey.txt
  * Install `uv` with `curl -LsSf https://astral.sh/uv/install.sh | sh`.
  * Use `uv` to install python 3.12:
  * * `uv python install 3.12`
@@ -39,6 +40,9 @@ I'm using this because the API makes it fairly easy to do RAG and context window
  * * `uv pip install open-webui`
  * Activate the venv and run open-webui
  * * `source ./venv/bin/activate` then `open-webui serve`
+ * Visit http://localhost:8080 and generate your api key
+ * * click your name (lower left), Account, generate API key
+ * * put this in openwebuiapikey.txt as instructed above
 
  If you already have ollama running on the default port, it will automatically use it.
 

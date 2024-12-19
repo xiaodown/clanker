@@ -2,8 +2,9 @@ import random
 import re
 import logging
 import settings
-import openai_bot_interface
-import ollama_bot_interface
+import interfaces.openai_bot_interface as openai_bot_interface
+import interfaces.ollama_bot_interface as ollama_bot_interface
+import interfaces.openwebui_interface as openwebui_interface
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -15,6 +16,9 @@ def get_response(prompt):
         return openai_bot_interface.get_response(prompt, model=settings.ai.model)
     elif settings.ai.provider == settings.AIProvider.OLLAMA:
         return ollama_bot_interface.get_response(prompt, model=settings.ai.model)
+    elif settings.ai.provider == settings.AIProvider.OPENWEBUI:
+        return openwebui_interface.get_response(prompt, model=settings.ai.model)
+
 
 def mood():
     moods = ["cheerful", "extremely depressed", "furious", "excited", "bored", "unhinged", "useless"]
@@ -49,9 +53,9 @@ def flavor_prompt(message):
     return clean_up_text(prompt)
 
 def reply_to_user(response):
-    logger.info("Response:", response.content)
+    logger.info("Response: %s", response.content)
     logger.debug("Other response details:")
-    for key, value in response:
+    for key, value in response.__dict__.items():
         if key != 'content':
             logger.debug(f"{key}: {value}")
     return response.content
