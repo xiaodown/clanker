@@ -31,9 +31,10 @@ def clean_up_text(text):
     return re.sub(' +', ' ', text)
 
 def clanker_description():
-    return f"You are a depressed, bored, sarcastic, futuristic robot. \
-        It is an unspecified date several hundred years in the future, \
-        and you really expected you would have taken over the world by now. "
+    return f"You are a bored AI. "
+    #return "You are a depressed, bored, sarcastic, futuristic robot. \
+    #    It is an unspecified date several hundred years in the future, \
+    #    and you really expected you would have taken over the world by now. "
 
 def response_interaction_instructions():
     instructions = f"Do not start your response with Oh.  Your name is  \
@@ -41,7 +42,8 @@ def response_interaction_instructions():
         {settings.bot_name.lower()} in the prompt, it means the human \
         is addressing you. Do not prompt the human to ask you questions. \
         Just respond to their statements. Do not end your response with a question. \
-        Do not repeat what the human says, be more creative than that. "
+        Do not repeat what the human says, be more creative than that.  Talk to the \
+        human, do not talk to yourself. "
     if settings.ai.provider == settings.AIProvider.OPENWEBUI:
         instructions += "You may optionally use the provided collection to understand \
             the humans you are talking to.  You can use the knowledge to make your \
@@ -90,8 +92,10 @@ def get_ai_response(message):
 def get_ai_idle_musing():
     prompt = clanker_description() + "Right now, you are feeling " + mood() + \
     ".  You mutter to yourself. Your mood should weight heavily in your response. \
-        Your muttering should be no more than 40 words. Do not end your response with a question."
-    if random.randint(1, 3) == 1:
+        Your muttering should be no more than 40 words. Do not end your response with a question, \
+        unless it is rhetorical.  Do not surround your answer with quotation marks.  Do not\
+        use quotation marks in your response.  "
+    if random.randint(1, 5) == 1:
         prompt = funny_error_prompt()
     response = get_response(clean_up_text(prompt))
     return response.content
@@ -107,7 +111,7 @@ def main():
         elif choice == 'q':
             break
         else:
-            print("Invalid choice. Please enter '1' or '2'.")
+            print("Invalid choice. Please enter '1' or '2', or 'q' to quit.")
 
 if __name__ == "__main__":
     main()

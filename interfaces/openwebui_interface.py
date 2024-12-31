@@ -10,6 +10,48 @@ logger = logging.getLogger(__name__)
 
 base_url = 'http://localhost:8080/'
 _api_key = None
+_chat_id = None
+_chat_updated_at = None
+
+def conversation_expired():
+    global _chat_updated_at
+    if _chat_updated_at is None:
+        return True
+
+    current_time = datetime.now().timestamp()
+    hours_passed = (current_time - _chat_updated_at) / 3600
+    return hours_passed > settings.length_of_conversation
+
+def load_chat_id():
+    global _chat_id
+    global _chat_updated_at
+
+    if _chat_id is None or conversation_expired():
+        # if there's no chat ID or the conversation has expired, start a new one
+        api_key = load_openwebui_key()
+        url = f"{base_url}api/chats/new"
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        }
+        data = {
+            'chat': {}
+        }
+        try:
+            response = requests.post(url, headers=headers, json=data)
+            response.raise_for_status()
+            response_data = response.json()
+            _chat_id = response_data['id']
+            _chat_updated_at = response_data['updated_at']
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"HTTP error occurred: {e}")
+            logger.error(f"Response status code: {response.status_code}")
+            logger.error(f"Response content: {response.content}")
+            raise
+        except Exception as e:
+            logger.error(f"An error occurred: {e}")
+            raise
+    return _chat_id
 
 def load_openwebui_key():
     global _api_key

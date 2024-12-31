@@ -20,7 +20,8 @@ class AI:
             return "gemma2"
         elif self.provider == AIProvider.OPENWEBUI:
             #return "dolphin-llama3:8b-256k"
-            return "gemma2:latest"
+            #return "gemma2:latest"
+            return "llama3.2:latest"
 
 def load_openai_api_key():
     try:
@@ -44,7 +45,8 @@ def load_openwebui_api_key():
 
 bot_name = "Clanker"
 ai = AI(AIProvider.OPENWEBUI)  # Change this to switch providers
-bypass_filter = True # only applies to open-webui interface
+bypass_filter = True # only applies to open-webui interface, also legacy(?)
+length_of_conversation = 168 # hours before starting a new convo, for testing, 168 = 1 week
 
 
 # Below is the knowledge_id of the knowledge collection.  This is what
