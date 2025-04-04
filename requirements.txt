@@ -1,3 +1,5 @@
 discord.py==2.4.0
 openai==1.57.4
 requests==2.32.3
+langchain_core
+langchain_ollama

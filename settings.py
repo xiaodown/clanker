@@ -17,7 +17,7 @@ class AI:
         if self.provider == AIProvider.OPENAI:
             return "gpt-4o-mini"
         elif self.provider == AIProvider.OLLAMA:
-            return "gemma2"
+            return "gemma3"
         elif self.provider == AIProvider.OPENWEBUI:
             #return "dolphin-llama3:8b-256k"
             #return "gemma2:latest"

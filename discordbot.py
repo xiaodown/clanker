@@ -4,7 +4,6 @@ import asyncio
 from datetime import datetime, timedelta
 import random
 import settings
-import interfaces.openwebui_interface as openwebui_interface
 
 bot_name = settings.bot_name
 api_key = settings.load_discord_api_key()
@@ -60,7 +59,8 @@ async def on_message(message):
     global _last_message_time
     _last_message_time = datetime.now()
     try:
-        openwebui_interface.add_chat_message_to_memory(message)
+        # Add the message to memory
+        pass
     except:
         print("Failed to add chat message to memory.")
     print(f"Message from {message.author}: {message.content}")

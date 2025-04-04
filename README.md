@@ -19,7 +19,7 @@ But he's also kind of a jerk.
  * * `uv pip install -r requirements.txt`
 
 # Ollama instructions
-If you don't want to use OpenAI, I would suggest using ollama which is basically an openai-compatible api with a bunch of convenience features built in for downloading LLMs.  I'm using gemma2 but this is configurable, just change it in settings.py.  You can also switch between openai and ollama in settings.py.
+If you don't want to use OpenAI, I would suggest using ollama which is basically an openai-compatible api with a bunch of convenience features built in for downloading LLMs.  I'm using gemma3 but this is configurable, just change it in settings.py.  You can also switch between openai and ollama in settings.py.
 
 The basic setup of ollama goes something like:
  * install ollama
@@ -27,7 +27,7 @@ The basic setup of ollama goes something like:
  * * if you're on WSL2 and it complains about systemd, ignore it and don't install systemd (can screw up WSL)
  * * if on WSL, run it with something like `nohup ollama serve >> ollama.log &` rather than systemd.
  * Download a model
- * * `ollama pull gemma2`  (or whatever model, configurable in settings)
+ * * `ollama pull gemma3`  (or whatever model, configurable in settings)
 
 Training and feeding your LLM more data are out of scope for this document (because I don't know how yet).  
 
@@ -73,4 +73,4 @@ I eventually want:
  * ~~To not be using OpenAI, instead to use a LLM that I have some more control over and maybe host locally.~~ FRIKIN' DONE
  * Speech-to-text
  * Text-to-Speech
- * join discord channels
+ * join discord voice channels
