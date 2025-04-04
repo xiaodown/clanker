@@ -129,4 +129,6 @@ that .... might be it?
 oh, finish langchain.py as an interface. 
 And clean up the code repo (lol as if)
 
+Oh, and make it train on long term chat logs eventually (weekly maybe?)
+
 """
