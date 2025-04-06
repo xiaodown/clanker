@@ -24,7 +24,7 @@ class AI:
         if self.provider == AIProvider.OPENAI:
             return "gpt-4o-mini"
         elif self.provider == AIProvider.OLLAMA:
-            return "gemma3:12b"
+            return "gemma3-32k:12b"
 
 def load_openai_api_key():
     try:
