@@ -29,31 +29,50 @@ def get_raw_response(prompt):
         return openai_bot_interface.get_response(prompt, model=settings.ai.model)
     elif settings.ai.provider == settings.AIProvider.OLLAMA:
         return ollama_bot_interface.get_response(prompt, model=settings.ai.model)
+
+def get_fast_raw_response(prompt):
+    # So far, I haven't gotten this to work, running two models seems to really
+    # not be possible, at least on my 3090ti.
+    if settings.ai.provider == settings.AIProvider.OPENAI:
+        return openai_bot_interface.get_response(prompt, model=settings.ai.fast_raw_model)
+    elif settings.ai.provider == settings.AIProvider.OLLAMA:
+        return ollama_bot_interface.get_response(prompt, model=settings.ai.fast_raw_model)
     
 def is_bot_being_addressed(speaker, channel, message):
-    # This ... lol doens't work yet.  The bot thinks he should answer to everything.
+    # This ... lol doens't work great.  The bot thinks he should answer to everything.
     # what an ego.
-    testprompt = ""
-    testprompt += get_current_day_logs(channel)
-    testprompt += f"\n\n {speaker} said: {message}"
-    testprompt += f"\n\n Based on the conversation history and this new message, would \
+    bot_being_addressed = False
+    prompt = "Here is the recent conversation history: \n"
+    full_logs = get_current_day_logs(channel)
+    last_ten_lines = "\n".join(full_logs.splitlines()[-10:])
+    prompt += last_ten_lines
+    prompt += f"\n\n New chat message:  {speaker} said: {message}"
+    prompt += f"\n\n Based on the conversation history and this new message, would \
               a human reply to the new message? if the new message is addressed to \
-              {settings.bot_name} then this is more likely. \n \
-              if it appears the humans are only conversing between themselves, then this \
-              is less likely.\n \
+              {settings.bot_name} or 'the bot' or similar titles, then the likelihood of a \
+              response is near certain. \n \
+              If it appears the humans are only conversing between themselves, then this \
+              is less likely, but still possible as a human would interject information if \
+              it were relevant to the topic at hand.\n \
               Answer ONLY with 'True' or 'False'.\n Your answer must ONLY be 'True' or 'False'.\
               Do not add any other text. \n \
+              You want the conversation to flow naturally, and avoid awkwardness. \n \
+              In many cases, this means that you should not respond to the humans. \
               Consider the implications of your response: if you say 'True', then the bot \
-              will send a message to the LLM to get a response, and that response will \
-              be sent to the channel.  If you say 'False', then the bot will not respond. \
-              in many cases, it may be better to say 'False' than 'True'.\n \
-              Remember, ONLY reply with False or True, and do not add any other text.  Your \
-              text reply will be cast as a boolean value by the python code, so if you answer \
-              with anything other than True or False, the application will break.  \n\n"
+              will respond in the channel.  If you say 'False', then the bot will not respond. \
+              If you reply when you should not, or when a human would not reply, then it will \
+              be awkward for you and more so for the humans.  \n \
+              If you do not reply when you should, or when a human would reply, then it will \
+              be awkward for you and more so for the humans.  \n \
+              Remember, ONLY reply with False or True, and do not add any other text."
 
-    bot_being_addressed = get_raw_response(testprompt).content
+    prompt = re.sub(r'\t+', ' ', prompt)
+    prompt = re.sub(r' {2,}', ' ', prompt)
+    bot_being_addressed_response = get_raw_response(prompt).content
+    if "true" in bot_being_addressed_response.lower():
+        bot_being_addressed = True
     print(f"bot_being_addressed: {bot_being_addressed}")
-    logger.info("bot_being_addressed: " + bot_being_addressed)
+    logger.info("bot_being_addressed: " + str(bot_being_addressed))
     return bool(bot_being_addressed)
 
 def mood():

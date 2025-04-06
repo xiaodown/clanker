@@ -94,33 +94,45 @@ async def on_message(message):
     # meant to only be on one server for small group amusement.
     global _last_message_time
     _last_message_time = datetime.now()
+
+    # Track the channel where the bot has spoken
     if message.channel.id not in _spoken_channels:
         _spoken_channels.add(message.channel.id)
+
     try:
         chat_handler.save_chat_message(message)
-        pass
     except:
         logger.error("Failed to save chat message.")
         print("Failed to add chat message to memory.")
-    print(f"Message from {message.author.name}: {message.content}")
-    if bot_name.lower() in message.content.lower() and message.author != bot.user:
-    #if message.author != bot.user:
-        #if bot_interface.is_bot_being_addressed(message.author.name, message.channel.name, message.content):
-        # leaving ^^ there to play with it later.
-        if True:
-            global _bot_has_ever_spoken
-            _bot_has_ever_spoken = True
-            global _last_guild_id
-            _last_guild_id = message.guild.id
-            global _last_channel_id
-            _last_channel_id = message.channel.id
 
-            await message.channel.send(
-                bot_interface.get_response(
-                    message.channel.name, 
-                    message.author.name, 
-                    message.content
-                )
+    print(f"Message from {message.author.name}: {message.content}")
+
+    # Decide if the bot should respond based on settings
+    should_talk = False
+    if not settings.bot_decides_if_it_should_talk:
+        # Use the simpler logic: check if the bot's name is mentioned
+        if bot_name.lower() in message.content.lower() and message.author != bot.user:
+            should_talk = True
+    else:
+        if message.author != bot.user:
+            # Use the advanced (read: jank) logic: check if the bot is being addressed
+            should_talk = bot_interface.is_bot_being_addressed(
+                message.author.name, message.channel.name, message.content
             )
+
+    # If the bot should talk, respond
+    if should_talk and message.author != bot.user:
+        global _bot_has_ever_spoken, _last_guild_id, _last_channel_id
+        _bot_has_ever_spoken = True
+        _last_guild_id = message.guild.id
+        _last_channel_id = message.channel.id
+
+        await message.channel.send(
+            bot_interface.get_response(
+                message.channel.name,
+                message.author.name,
+                message.content
+            )
+        )
 
 bot.run(api_key)

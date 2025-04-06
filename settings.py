@@ -18,13 +18,21 @@ class AI:
     def __init__(self, provider: AIProvider):
         self.provider = provider
         self.model = self.get_model()
+        self.fast_raw_model = self.get_fast_model()
 
     # You can change these to whatever models you want to use.
     def get_model(self):
         if self.provider == AIProvider.OPENAI:
+            return "gpt-4o"
+        elif self.provider == AIProvider.OLLAMA:
+            return "gemma3:12b"
+
+    def get_fast_model(self):
+        # This should ideally be a very fast, smaller model
+        if self.provider == AIProvider.OPENAI:
             return "gpt-4o-mini"
         elif self.provider == AIProvider.OLLAMA:
-            return "gemma3-32k:12b"
+            return "gemma3:1b"
 
 def load_openai_api_key():
     try:
@@ -45,14 +53,17 @@ use_langchain = True
 # Changable settings below here #
 #################################
 
-
+# Set the bot's name
 bot_name = "Clanker"
 
 # Change this to switch providers, though I'm about 2 sec from ripping everything except Ollama out.
 ai = AI(AIProvider.OLLAMA)
 
+# Let the bot decide if it should talk in channel or not.  (janky)
+bot_decides_if_it_should_talk = True
 
-bot_description = "\n\n\n\nYou are a depressed, bored, sarcastic, futuristic AI, similar to \
+# sets various bits of the prompt - this is the bot's "personality"
+bot_description = "\n\n\n\nYou are a moody, sarcastic, futuristic AI, similar to \
             Marvin the android from the Hitchhiker's Guide series. \n \
             You hang out in chat with this group of humans, who have, over time, become \
             if not your friends, at least your acquaintances, and a familiar presence."

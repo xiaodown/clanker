@@ -46,7 +46,7 @@ def handle_conversation():
         user_input = input("You: ")
         if user_input.lower() == "exit":
             break
-        
+
         # Check if the question has been asked before
         if user_input in conversation_history:
             result = conversation_history[user_input]
@@ -56,7 +56,7 @@ def handle_conversation():
             print("Bot:", result)
             # Save the new conversation to history
             conversation_history[user_input] = result
-        
+
         context += f"\nUser: {user_input}\nAI: {result}"
 
     # Save the conversation history when the chat ends
