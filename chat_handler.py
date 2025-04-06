@@ -1,7 +1,11 @@
 import os
 import json
+import logging
 from datetime import datetime, timedelta
-from interfaces import ollama_bot_interface
+import bot_interface
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
 
 
 
@@ -46,21 +50,21 @@ def summarize_chat(channel):
 
     # Check if the summary already exists in long_term
     if os.path.exists(long_term_file):
-        print(f"Summary for {yesterday} already exists in long_term.")
-        return
+        logger.info("Summary for %s already exists in long_term.", yesterday)
+        return False
 
     # Check if the short_term file exists
     if not os.path.exists(short_term_file):
-        print(f"No chat logs found for {yesterday} in short_term.")
-        return
+        logger.info("No chat logs found for %s in short_term.", yesterday)
+        return "No chat logs found for %s in short_term.", yesterday
 
     # Load the short_term file
     try:
         with open(short_term_file, 'r') as file:
             chat_logs = json.load(file)
     except json.JSONDecodeError:
-        print(f"Error decoding JSON in {short_term_file}.")
-        return
+        logger.error("Error decoding JSON data in %s", short_term_file)
+        return False
 
     # Convert chat logs to a human-readable string
     readable_logs = ""
@@ -76,19 +80,19 @@ def summarize_chat(channel):
         "said what."
     )
 
-    # Use ollama_bot_interface to get the summary
     try:
-        summary = ollama_bot_interface.get_response(prompt)
+        summary = bot_interface.get_raw_response(prompt)
     except Exception as e:
-        print(f"Error getting response from Ollama: {e}")
-        return
+        logger.error("Error getting response from Ollama: %s", e)
+        return False
 
     # Save the summary to the long_term directory
     os.makedirs('chat_logs/long_term', exist_ok=True)
     with open(long_term_file, 'w') as file:
         file.write(summary)
 
-    print(f"Summary for {yesterday} saved to {long_term_file}.")
+    logger.info("Summary for %s saved to %s.", yesterday, long_term_file)
+    return "Summary for %s saved to %s.", yesterday, long_term_file
 
 
 def get_current_day_logs(channel):
@@ -97,11 +101,19 @@ def get_current_day_logs(channel):
         with open(filename, 'r') as file:
             try:
                 data = json.load(file)
-                return data
+                # Convert JSON data to a human-readable string
+                readable_logs = ""
+                for log in data:
+                    # Parse the timestamp and extract only the time
+                    timestamp = datetime.strptime(log['timestamp'], "%B %d, %Y, %I:%M:%S %p").strftime("%I:%M:%S %p")
+                    # Strip out newlines from log['content']
+                    content = log['content'].replace("\n", " ")
+                    readable_logs += f"[{timestamp}] {log['speaker']}: {content}\n"
+                return readable_logs
             except json.JSONDecodeError:
-                return []  # Return empty list if the file is invalid
+                logger.error("Error decoding JSON data.")
     else:
-        return []  # Return empty list if the file does not exist
+        return ""
 
 def get_long_term_logs(channel):
     logs = []
@@ -111,24 +123,12 @@ def get_long_term_logs(channel):
         if os.path.exists(filename):
             try:
                 with open(filename, 'r') as file:
-                    logs.append(file.read())  # Append the content of the file
+                    logs.append(file.read())
             except Exception as e:
-                print(f"Error reading log for {day}: {e}")
-                logs.append(f"Error reading log for {day}.")  # Add error message to logs
+                logger.error("Error reading log: %s", e)
         else:
-            logs.append(f"No logs found for {day}.")  # Add a message if the file doesn't exist
-
+            logger.info("No logs found for %s.", day)
+    
+    if not any(logs):
+        return None
     return "\n\n".join(logs)
-
-"""
-TODO list:
-Turn bot_interface into a prompt function thing
-add savechat to discordbot.py
-that .... might be it?
-
-oh, finish langchain.py as an interface. 
-And clean up the code repo (lol as if)
-
-Oh, and make it train on long term chat logs eventually (weekly maybe?)
-
-"""

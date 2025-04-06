@@ -1,9 +1,15 @@
-import discord
-import bot_interface
-import asyncio
 from datetime import datetime, timedelta
+import asyncio
+import bot_interface
+import chat_handler
+import discord
+import logging
 import random
 import settings
+
+
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
 
 bot_name = settings.bot_name
 api_key = settings.load_discord_api_key()
@@ -17,11 +23,15 @@ _bot_has_ever_spoken = False
 _last_guild_id = 0
 _last_channel_id = 0
 
+# Global list to track channels where the bot has seen messages
+# This is dirty - if the bot is not running at 9am it might miss a summarizing event.
+_spoken_channels = set()
+
 async def check_inactivity():
     # In theory, if the bot has spoken, but hasn't spoken for 2-3 hours, he will
     # say something in the last channel he spoke in.
     # God only knows if this will break, globals with async seems like inviting disaster.
-    deltaminutes = (120 + random.randint(1, 59))
+    deltaminutes = (240 + random.randint(1, 59))
     await bot.wait_until_ready()
     global _last_message_time
     while not bot.is_closed():
@@ -34,11 +44,36 @@ async def check_inactivity():
                     channel = guild.get_channel(_last_channel_id)
                     if channel:
                         # reset delta to randomize it each time
-                        deltaminutes = (120 + random.randint(1, 59))
+                        deltaminutes = (240 + random.randint(1, 59))
                         await channel.send(message)
-                # Reset the last_message_time to avoid doing again immediately
+                # Reset the last_message_time to avoid doing it again immediately
                 _last_message_time = datetime.now()
         await asyncio.sleep(60)  # Check every minute
+
+async def save_longterm_chat():
+    await bot.wait_until_ready()
+    while not bot.is_closed():
+        # Calculate the time until 9 AM
+        now = datetime.now()
+        next_run = datetime.combine(now.date(), datetime.min.time()) + timedelta(days=1, hours=9)
+        if now.hour >= 9:
+            next_run += timedelta(days=1)
+        wait_time = (next_run - now).total_seconds()
+
+        # Wait until 9 AM
+        await asyncio.sleep(wait_time)
+
+        # Iterate over all channels the bot has spoken in
+        for channel_id in _spoken_channels:
+            channel = bot.get_channel(channel_id)
+            if channel:
+                result = chat_handler.summarize_chat(channel.name)
+                if result:
+                    # Send the result to the channel
+                    await channel.send(result)
+                else:
+                    # Log or handle the case where summarize_chat returns False
+                    print(f"Failed to summarize chat for channel: {channel.name}")
 
 @bot.event
 async def on_ready():
@@ -49,6 +84,7 @@ async def on_ready():
 
     print(f"{bot_name} is on " + str(guild_count) + " servers.")
     bot.loop.create_task(check_inactivity())
+    bot.loop.create_task(save_longterm_chat())
 
 @bot.event
 async def on_message(message):
@@ -58,19 +94,33 @@ async def on_message(message):
     # meant to only be on one server for small group amusement.
     global _last_message_time
     _last_message_time = datetime.now()
+    if message.channel.id not in _spoken_channels:
+        _spoken_channels.add(message.channel.id)
     try:
-        # Add the message to memory
+        chat_handler.save_chat_message(message)
         pass
     except:
+        logger.error("Failed to save chat message.")
         print("Failed to add chat message to memory.")
-    print(f"Message from {message.author}: {message.content}")
+    print(f"Message from {message.author.name}: {message.content}")
     if bot_name.lower() in message.content.lower() and message.author != bot.user:
-        global _bot_has_ever_spoken
-        _bot_has_ever_spoken = True
-        global _last_guild_id
-        _last_guild_id = message.guild.id
-        global _last_channel_id
-        _last_channel_id = message.channel.id
-        await message.channel.send(bot_interface.get_ai_response(message.content))
+    #if message.author != bot.user:
+        #if bot_interface.is_bot_being_addressed(message.author.name, message.channel.name, message.content):
+        # leaving ^^ there to play with it later.
+        if True:
+            global _bot_has_ever_spoken
+            _bot_has_ever_spoken = True
+            global _last_guild_id
+            _last_guild_id = message.guild.id
+            global _last_channel_id
+            _last_channel_id = message.channel.id
+
+            await message.channel.send(
+                bot_interface.get_response(
+                    message.channel.name, 
+                    message.author.name, 
+                    message.content
+                )
+            )
 
 bot.run(api_key)
