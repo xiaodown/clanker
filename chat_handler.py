@@ -17,6 +17,7 @@ def save_chat_message(message):
 
     os.makedirs('chat_logs', exist_ok=True)
     os.makedirs('chat_logs/short_term', exist_ok=True)
+    os.makedirs('chat_logs/long_term', exist_ok=True)
     filename = f'chat_logs/short_term/{channel}_{datetime.now().strftime("%Y-%m-%d")}.json'
     data = {
         "channel": channel,
