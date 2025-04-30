@@ -7,4 +7,4 @@ fi
 source .venv/bin/activate
 mkdir -p logs
 
-python discordbot.py 2>&1 | tee -a logs/output.log
+PYTHONUNBUFFERED=1 python discordbot.py 2>&1 | tee -a logs/output.log
