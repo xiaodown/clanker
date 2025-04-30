@@ -11,11 +11,14 @@ import settings
 
 
 def get_response(prompt, model):
+    # Escape literal curly braces in the prompt
+    escaped_prompt = prompt.replace("{", "{{").replace("}", "}}")
+    
     # Create an instance of the OllamaLLM with the specified model
     llm = OllamaLLM(model=model)
     
     # Create a prompt template
-    prompt_template = ChatPromptTemplate.from_template(prompt)
+    prompt_template = ChatPromptTemplate.from_template(escaped_prompt)
     
     # Chain the prompt with the model
     chain = prompt_template | llm
