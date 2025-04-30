@@ -54,12 +54,13 @@ def summarize_from_string(chatlog) -> str:
         f"{chatlog}\n\n"
         "Provide a concise summary, but don't miss important discussion topics\n"
         "any significant events that occurred during the conversation, and who"
-        "said what."
+        "said what.\n"
+        f"Take {bot_name}'s demeanor and attitude as given; it is not important to"
+        "include them in the summary as they do not change."
     )
 
     try:
-        response = bot_interface.get_raw_response(prompt)
-        summary = response['choices'][0]['message']['content']
+        summary = bot_interface.get_raw_response(prompt).content
         return summary
     except Exception as e:
         logger.error("Error getting response from Ollama: %s", e)
