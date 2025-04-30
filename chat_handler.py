@@ -59,8 +59,6 @@ def summarize_from_string(chatlog) -> str:
         f"demeanor; only {bot_name}'s responses are important."
     )
         
-    print(f"summarize_from_string Prompt: {prompt}")
-
     try:
         summary = bot_interface.get_raw_response(prompt).content
         return summary
