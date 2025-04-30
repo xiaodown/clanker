@@ -64,7 +64,8 @@ def is_bot_being_addressed(speaker, channel, message):
               be awkward for you and more so for the humans.  \n \
               If you do not reply when you should, or when a human would reply, then it will \
               be awkward for you and more so for the humans.  \n \
-              Remember, ONLY reply with False or True, and do not add any other text."
+              Remember, ONLY reply with False or True, and do not add any other text. \n \
+              Bias towards not replying (False) if there is any ambiguity."
 
     prompt = re.sub(r'\t+', ' ', prompt)
     prompt = re.sub(r' {2,}', ' ', prompt)

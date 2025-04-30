@@ -66,14 +66,17 @@ async def save_longterm_chat():
         # Iterate over all channels the bot has spoken in
         for channel_id in _spoken_channels:
             channel = bot.get_channel(channel_id)
-            if channel:
-                result = chat_handler.summarize_chat(channel.name)
-                if result:
-                    # Send the result to the channel
-                    await channel.send(result)
-                else:
-                    # Log or handle the case where summarize_chat returns False
-                    print(f"Failed to summarize chat for channel: {channel.name}")
+            try:
+                if channel and isinstance(channel, discord.TextChannel) and channel.name:
+                    result = chat_handler.summarize_chat(channel.name)
+                    if result and isinstance(result, str):
+                        # I want to see this to know if it's working
+                        await channel.send(result)
+                    else:
+                        print(f"Failed to summarize chat for channel: {channel.name}")
+            except Exception as e:
+                logger.error(f"Error summarizing chat for channel {channel_id}: {e}")
+                print(f"Error summarizing chat for channel {channel_id}: {e}")
 
 @bot.event
 async def on_ready():

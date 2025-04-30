@@ -54,7 +54,7 @@ bot_name = "Clanker"
 ai = AI(AIProvider.OLLAMA)
 
 # Let the bot decide if it should talk in channel or not.  (janky)
-bot_decides_if_it_should_talk = True
+bot_decides_if_it_should_talk = False # turns out it's TOO janky for now
 
 # sets various bits of the prompt - this is the bot's "personality"
 bot_description = "\n\n\n\nYou are a moody, sarcastic, futuristic AI, similar to \

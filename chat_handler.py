@@ -43,7 +43,27 @@ def save_chat_message(message):
     with open(filename, 'w') as file:
         json.dump(existing_data, file, indent=4)
 
-def summarize_chat(channel):
+def summarize_from_string(chatlog) -> str:
+    """
+    Takes any string and sends it to the LLM for summarization.
+    In the event of failure, it returns a falsy value.
+    """    
+    prompt = (
+        "Summarize the following chat logs:\n\n"
+        f"{chatlog}\n\n"
+        "Provide a concise summary, but don't miss important discussion topics\n"
+        "any significant events that occurred during the conversation, and who"
+        "said what."
+    )
+
+    try:
+        summary = bot_interface.get_raw_response(prompt)
+        return summary
+    except Exception as e:
+        logger.error("Error getting response from Ollama: %s", e)
+        return ""
+
+def summarize_chat(channel) -> str:
     # Calculate yesterday's date
     yesterday = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d")
     short_term_file = f'chat_logs/short_term/{channel}_{yesterday}.json'
@@ -72,20 +92,7 @@ def summarize_chat(channel):
     for log in chat_logs:
         readable_logs += f"[{log['timestamp']}] {log['speaker']}: {log['content']}\n"
 
-    # Create a custom prompt for summarization
-    prompt = (
-        "Summarize the following chat logs:\n\n"
-        f"{readable_logs}\n\n"
-        "Provide a concise summary, but don't miss important discussion topics\n"
-        "any significant events that occurred during the conversation, and who"
-        "said what."
-    )
-
-    try:
-        summary = bot_interface.get_raw_response(prompt)
-    except Exception as e:
-        logger.error("Error getting response from Ollama: %s", e)
-        return False
+    summary = summarize_from_string(readable_logs)
 
     # Save the summary to the long_term directory
     os.makedirs('chat_logs/long_term', exist_ok=True)
@@ -104,15 +111,30 @@ def get_current_day_logs(channel):
                 data = json.load(file)
                 # Convert JSON data to a human-readable string
                 readable_logs = ""
+
                 for log in data:
                     # Parse the timestamp and extract only the time
                     timestamp = datetime.strptime(log['timestamp'], "%B %d, %Y, %I:%M:%S %p").strftime("%I:%M:%S %p")
                     # Strip out newlines from log['content']
                     content = log['content'].replace("\n", " ")
                     readable_logs += f"[{timestamp}] {log['speaker']}: {content}\n"
-                return readable_logs
+                                # Split logs into lines
+
+                log_lines = readable_logs.splitlines()
+                if len(log_lines) > 20:
+                    last_20_lines = "\n".join(log_lines[-20:])
+                    earlier_logs = "\n".join(log_lines[:-20])
+                    summary = summarize_from_string(earlier_logs)
+                    combined_logs = f"{summary}\n\n{last_20_lines}"
+                    return combined_logs
+                else:
+                    return readable_logs
+                
             except json.JSONDecodeError:
                 logger.error("Error decoding JSON data.")
+            except Exception as e:
+                logger.error("Unknown error: %s", e)
+                print(f"Unknown error: ", e)
     else:
         return ""
 
