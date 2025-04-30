@@ -125,8 +125,8 @@ def get_current_day_logs(channel):
 
                 log_lines = readable_logs.splitlines()
                 if len(log_lines) > 20:
-                    last_20_lines = "\n".join(log_lines[-20:])
-                    earlier_logs = "\n".join(log_lines[:-20])
+                    last_20_lines = "\n".join(log_lines[-25:])
+                    earlier_logs = "\n".join(log_lines[:-25])
                     summary = summarize_from_string(earlier_logs)
                     print(f"Summary because logs were too long: \n {summary}")
                     combined_logs = f"{summary}\n\n{last_20_lines}"
