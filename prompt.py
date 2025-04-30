@@ -56,6 +56,7 @@ def get_prompt(channel, speaker, message):
     # Clean up 
     prompt = re.sub(r'\t+', ' ', prompt)
     prompt = re.sub(r' {2,}', ' ', prompt)
+    escaped_prompt = prompt.replace("{", "{{").replace("}", "}}")
 
-    logger.info("\n\n\n***Prompt***: \n\n\n%s \n\n\n", prompt)
+    logger.info("\n\n\n***Prompt***: \n\n\n%s \n\n\n", escaped_prompt)
     return prompt
