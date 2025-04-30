@@ -55,9 +55,11 @@ def summarize_from_string(chatlog) -> str:
         "Provide a concise summary, but don't miss important discussion topics\n"
         "any significant events that occurred during the conversation, and who"
         "said what.\n"
-        f"Take {bot_name}'s demeanor and attitude as given; it is not important to"
-        "include them in the summary as they do not change."
+        f"Do not include any information about {bot_name}'s attitude, behavior, or"
+        f"demeanor; only {bot_name}'s responses are important."
     )
+        
+    print(f"summarize_from_string Prompt: {prompt}")
 
     try:
         summary = bot_interface.get_raw_response(prompt).content
