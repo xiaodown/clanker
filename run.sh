@@ -5,4 +5,6 @@ if !(ollama list > /dev/null 2>&1); then
 	exit 1
 fi
 source .venv/bin/activate
-python discordbot.py
+mkdir -p logs
+
+python discordbot.py 2>&1 | tee -a logs/output.log
