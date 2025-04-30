@@ -125,6 +125,7 @@ def get_current_day_logs(channel):
                     last_20_lines = "\n".join(log_lines[-20:])
                     earlier_logs = "\n".join(log_lines[:-20])
                     summary = summarize_from_string(earlier_logs)
+                    print(f"Summary because logs were too long: \n {summary}")
                     combined_logs = f"{summary}\n\n{last_20_lines}"
                     return combined_logs
                 else:
