@@ -3,6 +3,7 @@ import json
 import logging
 from datetime import datetime, timedelta
 import bot_interface
+from settings import bot_name
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger(__name__)
@@ -57,7 +58,8 @@ def summarize_from_string(chatlog) -> str:
     )
 
     try:
-        summary = bot_interface.get_raw_response(prompt)
+        response = bot_interface.get_raw_response(prompt)
+        summary = response.get("content", "")
         return summary
     except Exception as e:
         logger.error("Error getting response from Ollama: %s", e)
