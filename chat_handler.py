@@ -59,7 +59,7 @@ def summarize_from_string(chatlog) -> str:
 
     try:
         response = bot_interface.get_raw_response(prompt)
-        summary = response.get("content", "")
+        summary = response['choices'][0]['message']['content']
         return summary
     except Exception as e:
         logger.error("Error getting response from Ollama: %s", e)
